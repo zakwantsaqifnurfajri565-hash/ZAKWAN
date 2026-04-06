@@ -10,35 +10,55 @@ var typed = new Typed(".text-hero", {
 document.addEventListener('DOMContentLoaded', function() {
     const hamburger = document.getElementById('hamburger');
     const navbar = document.querySelector('.navbar');
+    const navLinks = document.querySelectorAll('.navbar a');
     
     if (hamburger && navbar) {
         hamburger.addEventListener('click', function() {
             navbar.classList.toggle('active');
             hamburger.classList.toggle('active');
         });
+        
+        // Close menu when a link is clicked
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                navbar.classList.remove('active');
+                hamburger.classList.remove('active');
+            });
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const isClickInsideNav = navbar.contains(event.target);
+            const isClickInsideHamburger = hamburger.contains(event.target);
+            
+            if (!isClickInsideNav && !isClickInsideHamburger && navbar.classList.contains('active')) {
+                navbar.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
     }
 });
 
-// EmailJS Configuration
-emailjs.init("YOUR_PUBLIC_KEY_HERE"); // Replace with your EmailJS public key
+// EmailJS Configuration - Ganti dengan kode asli Anda
+emailjs.init("KODE_PUBLIC_KEY_ANDA"); // Dari EmailJS Account → General
 
 // Contact Form Handler
 document.addEventListener('DOMContentLoaded', function() {
     const contactForm = document.getElementById('contactForm');
-    
+
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
             // Get form values
             const formData = {
                 visitor_name: contactForm.querySelector('input[name="visitor_name"]').value,
                 visitor_email: contactForm.querySelector('input[name="visitor_email"]').value,
                 subject: contactForm.querySelector('input[name="subject"]').value,
                 message: contactForm.querySelector('textarea[name="message"]').value,
-                to_email: "zakwantsaqifnurfajri858@gmail.com" // Your email
+                to_email: "zakwantsaqifnurfajri858@gmail.com"
             };
-            
+
             // Basic validation
             if (formData.visitor_name && formData.visitor_email && formData.subject && formData.message) {
                 // Show loading state
@@ -46,26 +66,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 const originalText = submitBtn.textContent;
                 submitBtn.textContent = 'Sending...';
                 submitBtn.disabled = true;
-                
+
                 // Send email via EmailJS
                 emailjs.send(
-                    "YOUR_SERVICE_ID_HERE",      // Replace with your EmailJS service ID
-                    "YOUR_TEMPLATE_ID_HERE",     // Replace with your EmailJS template ID
+                    "SERVICE_ID_ANDA",      // Dari EmailJS Email Services
+                    "TEMPLATE_ID_ANDA",     // Dari EmailJS Email Templates
                     formData
                 ).then(function(response) {
                     console.log('Email sent successfully!', response);
-                    alert('Thank you! Your message has been sent successfully. I will get back to you soon.');
+                    alert('Terima kasih! Pesan Anda telah berhasil dikirim. Saya akan segera menghubungi Anda.');
                     contactForm.reset();
                     submitBtn.textContent = originalText;
                     submitBtn.disabled = false;
                 }).catch(function(error) {
                     console.error('Failed to send email:', error);
-                    alert('Failed to send message. Please try again later.');
+                    alert('Gagal mengirim pesan. Silakan coba lagi nanti atau hubungi langsung via email.');
                     submitBtn.textContent = originalText;
                     submitBtn.disabled = false;
                 });
             } else {
-                alert('Please fill all fields');
+                alert('Mohon isi semua field');
             }
         });
     }
